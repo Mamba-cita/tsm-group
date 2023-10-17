@@ -1,0 +1,116 @@
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "../../slice/users/usersApiSlice.js";
+import { logout } from "../../slice/authSlice.js";
+import brans from "../../assets/brans.png";
+
+export default function Header() {
+  const { userInfo } = useSelector((state) => state.auth);
+  const [logoutApiCall] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap();
+      dispatch(logout());
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
+    <header>
+      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand>TSM</Navbar.Brand>
+          </LinkContainer>
+
+          <Navbar.Toggle arial-aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              {userInfo ? (
+                <>
+                  <NavDropdown title={userInfo.name} id="username">
+                    <LinkContainer to="/profile">
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              ) : (
+                <>
+                  <LinkContainer to="/login">
+                    <Nav.Link>
+                      <FaSignInAlt /> Sign In
+                    </Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to="/register">
+                    <Nav.Link>
+                      <FaSignOutAlt /> Sign Up
+                    </Nav.Link>
+                  </LinkContainer>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <aside>
+        <div className="toggle">
+          <div className="logo">
+            <img src={brans} alt="" width="40px" height="40px" />
+            <h2>TSM</h2>
+          </div>
+          <div className="close" id="close-btn">
+            {" "}
+            close{" "}
+          </div>
+        </div>
+        <div className="sidebar">
+          <LinkContainer to="/trucks">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Trucks</h3>
+            </Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/garage">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Garage</h3>
+            </Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/trailer">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Trailers</h3>
+            </Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/trailer">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Trailers</h3>
+            </Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/trailer">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Trailers</h3>
+            </Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/trailer">
+            <Nav.Link>
+              <FaSignInAlt /> 
+              <h3>Log Out</h3>
+            </Nav.Link>
+          </LinkContainer>
+        </div>
+      </aside>
+    </header>
+  );
+}
